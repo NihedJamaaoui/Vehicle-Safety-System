@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚗 IoT Dashboard - Véhicule Connecté</title>
+
+  <!-- Librairies externes -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-gauges@2.1.7/gauge.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+
+  <!-- Fichier CSS externe -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🚗 IoT Dashboard - Véhicule Connecté</h1>
+      <p class="subtitle">Supervision en temps réel • Prédiction des risques • Contrôle intelligent</p>
+    </header>
+
+    <div class="dashboard-grid">
+      <!-- Contrôles LEDs -->
+      <section class="card controls-section">
+        <h3>🎛️ Contrôle des LEDs</h3>
+        <div class="led-controls">
+          <div class="led-item">
+            <div class="led-info">
+              <div class="led-status red"></div>
+              <span>LED Rouge</span>
+            </div>
+            <div class="led-buttons">
+              <button class="btn btn-on" id="btnRougeOn">ON</button>
+              <button class="btn btn-off" id="btnRougeOff">OFF</button>
+            </div>
+          </div>
+          
+          <div class="led-item">
+            <div class="led-info">
+              <div class="led-status orange"></div>
+              <span>LED Orange</span>
+            </div>
+            <div class="led-buttons">
+              <button class="btn btn-on" id="btnOrangeOn">ON</button>
+              <button class="btn btn-off" id="btnOrangeOff">OFF</button>
+            </div>
+          </div>
+          
+          <div class="led-item">
+            <div class="led-info">
+              <div class="led-status blue"></div>
+              <span>LED Bleue</span>
+            </div>
+            <div class="led-buttons">
+              <button class="btn btn-on" id="btnBleueOn">ON</button>
+              <button class="btn btn-off" id="btnBleueOff">OFF</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert-box">
+          <div class="alert-title">📋 Conditions d'Activation Automatique</div>
+          <div class="alert-content">
+            🔴 <strong>Rouge</strong>: Temp > 60°C OR Hum > 80% OR Zone dangereuse<br>
+            🟠 <strong>Orange</strong>: Temp > 40°C OR Hum > 70%<br>
+            🔵 <strong>Bleue</strong>: Conditions normales
+          </div>
+        </div>
+      </section>
+
+      <!-- Jauges -->
+      <section class="card gauges-section">
+        <h3>📊 Mesures en Temps Réel</h3>
+        <div class="gauges-container">
+          <div class="gauge-wrapper">
+            <div class="gauge-title">🌡️ Température</div>
+            <canvas id="tempGauge" width="350" height="250"></canvas>
+            <div class="gauge-value" id="tempValue">-- °C</div>
+          </div>
+          <div class="gauge-wrapper">
+            <div class="gauge-title">💧 Humidité</div>
+            <canvas id="humGauge" width="350" height="250"></canvas>
+            <div class="gauge-value" id="humValue">-- %</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statistiques -->
+      <section class="card stats-section">
+        <h3>📈 Analytics & Prédictions <span class="tf-badge">TensorFlow.js</span></h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">🌡️ Température Moyenne</div>
+            <div class="stat-value" id="avgTemp">--°C</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">💧 Humidité Moyenne</div>
+            <div class="stat-value" id="avgHum">--%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">⚠️ Zones Dangereuses</div>
+            <div class="stat-value" id="dangerZones">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">📈 Total Mesures</div>
+            <div class="stat-value" id="totalMeasures">0</div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="statsChart"></canvas>
+        </div>
+
+        <div class="alert-box" id="predictionAlert">
+          <div class="alert-title">🤖 Prédiction IA</div>
+          <div class="alert-content" id="predictionText">
+            Analyse des risques en cours...
+          </div>
+        </div>
+      </section>
+
+      <!-- Carte -->
+      <section class="card map-section">
+        <h3>📍 Localisation & Zones de Risque</h3>
+        <div id="map"></div>
+      </section>
+
+      <!-- Historique -->
+      <section class="card history-section">
+        <h3>📋 Historique des Données</h3>
+        <div class="history-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Température</th>
+                <th>Humidité</th>
+                <th>Localisation</th>
+                <th>Risque</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable">
+              <!-- Données dynamiques -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Script principal -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
